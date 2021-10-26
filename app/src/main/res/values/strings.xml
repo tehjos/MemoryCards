@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Memory Cards</string>
+    <string name="card_content_description">Card Image</string>
+</resources>
