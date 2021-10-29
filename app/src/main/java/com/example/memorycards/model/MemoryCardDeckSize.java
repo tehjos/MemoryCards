@@ -12,7 +12,7 @@ import java.lang.annotation.RetentionPolicy;
         MemoryCardDeckSize.LARGE
 })
 public @interface MemoryCardDeckSize {
-    public static final int SMALL = 12;
-    public static final int MEDIUM = 16;
-    public static final int LARGE = 20;
+    int SMALL = 12;
+    int MEDIUM = 16;
+    int LARGE = 20;
 }

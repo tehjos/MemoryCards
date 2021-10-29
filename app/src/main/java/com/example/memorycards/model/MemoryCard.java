@@ -1,25 +1,27 @@
 package com.example.memorycards.model;
 
+import com.example.memorycards.R;
+
 import java.util.Objects;
 
 public class MemoryCard {
     private final int frontDrawableId;
-    private final int backDrawableId;
+    public static final int BACK_DRAWABLE_ID = R.drawable.playing_card;
 
     private boolean isOpen;
 
-    public MemoryCard(int frontDrawableId, int backDrawableId) {
+    public MemoryCard(int frontDrawableId) {
         this.frontDrawableId = frontDrawableId;
-        this.backDrawableId = backDrawableId;
         this.isOpen = false;
+    }
+
+    private MemoryCard(int frontDrawableId, boolean isOpen) {
+        this.frontDrawableId = frontDrawableId;
+        this.isOpen = isOpen;
     }
 
     public int getFrontDrawableId() {
         return frontDrawableId;
-    }
-
-    public int getBackDrawableId() {
-        return backDrawableId;
     }
 
     public boolean isOpen() {
@@ -30,16 +32,23 @@ public class MemoryCard {
         isOpen = open;
     }
 
+    public MemoryCard copy() {
+        return new MemoryCard(
+                frontDrawableId,
+                isOpen
+        );
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MemoryCard that = (MemoryCard) o;
-        return frontDrawableId == that.frontDrawableId && backDrawableId == that.backDrawableId && isOpen == that.isOpen;
+        return frontDrawableId == that.frontDrawableId && isOpen == that.isOpen;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(frontDrawableId, backDrawableId, isOpen);
+        return Objects.hash(frontDrawableId, isOpen);
     }
 }
