@@ -39,6 +39,13 @@ public class MemoryCard {
         );
     }
 
+    public MemoryCard copy(boolean isOpen) {
+        return new MemoryCard(
+                frontDrawableId,
+                isOpen
+        );
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

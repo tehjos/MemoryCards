@@ -29,27 +29,35 @@ public class MemoryCardDeck {
             cards.add(new MemoryCard(DRAWABLE_IDS[i]));
         }
         shuffle();
+        cardsSubject.onNext(cards);
     }
 
     public Observable<List<MemoryCard>> observeCards() {
         return cardsSubject.hide();
     }
 
-    public void shuffle() {
-        Collections.shuffle(cards);
-        for (MemoryCard card : cards) {
-            card.setOpen(false);
+    public void resetCards() {
+        for (int i = 0; i < cards.size(); i++) {
+            cards.set(i, cards.get(i).copy(false));
         }
         cardsSubject.onNext(cards);
+    }
+
+    public void newGame() {
+        shuffle();
+        resetCards();
     }
 
     public void openCard(int position) {
         MemoryCard oldCard = cards.get(position);
         if (!oldCard.isOpen()) {
-            MemoryCard newCard = oldCard.copy();
-            newCard.setOpen(true);
+            MemoryCard newCard = oldCard.copy(true);
             cards.set(position, newCard);
             cardsSubject.onNext(cards);
         }
+    }
+
+    private void shuffle() {
+        Collections.shuffle(cards);
     }
 }

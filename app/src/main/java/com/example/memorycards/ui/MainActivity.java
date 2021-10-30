@@ -1,14 +1,18 @@
 package com.example.memorycards.ui;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.example.memorycards.R;
 import com.example.memorycards.model.MemoryCardDeck;
 import com.example.memorycards.model.MemoryCardDeckSize;
-import com.example.memorycards.model.MemoryCardGridLayoutManager;
 
 import java.util.ArrayList;
 
@@ -30,8 +34,30 @@ public class MainActivity extends AppCompatActivity{
         init();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.overflow_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.new_game) {
+            memoryCardDeck.newGame();
+            return true;
+        } else if (id == R.id.replay) {
+            memoryCardDeck.resetCards();
+            return true;
+        }
+        return false;
+    }
+
     private void init() {
         Timber.d("init");
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
         RecyclerView cardsRv = findViewById(R.id.cards_rv);
         cardsRv.setHasFixedSize(true);
         disposables = new CompositeDisposable();

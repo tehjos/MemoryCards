@@ -1,4 +1,4 @@
-package com.example.memorycards.model;
+package com.example.memorycards.ui;
 
 import android.content.Context;
 
