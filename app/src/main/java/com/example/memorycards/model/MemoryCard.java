@@ -6,22 +6,28 @@ import java.util.Objects;
 
 public class MemoryCard {
     private final int frontDrawableId;
-    public static final int BACK_DRAWABLE_ID = R.drawable.playing_card;
+    private final int backDrawableId;
 
     private boolean isOpen;
 
-    public MemoryCard(int frontDrawableId) {
+    public MemoryCard(int frontDrawableId, int backDrawableId) {
         this.frontDrawableId = frontDrawableId;
+        this.backDrawableId = backDrawableId;
         this.isOpen = false;
     }
 
-    private MemoryCard(int frontDrawableId, boolean isOpen) {
+    private MemoryCard(int frontDrawableId, int backDrawableId, boolean isOpen) {
         this.frontDrawableId = frontDrawableId;
+        this.backDrawableId = backDrawableId;
         this.isOpen = isOpen;
     }
 
     public int getFrontDrawableId() {
         return frontDrawableId;
+    }
+
+    public int getBackDrawableId() {
+        return backDrawableId;
     }
 
     public boolean isOpen() {
@@ -35,6 +41,7 @@ public class MemoryCard {
     public MemoryCard copy() {
         return new MemoryCard(
                 frontDrawableId,
+                backDrawableId,
                 isOpen
         );
     }
@@ -42,6 +49,7 @@ public class MemoryCard {
     public MemoryCard copy(boolean isOpen) {
         return new MemoryCard(
                 frontDrawableId,
+                backDrawableId,
                 isOpen
         );
     }

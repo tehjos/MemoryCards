@@ -10,28 +10,16 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import timber.log.Timber;
 
-public class MemoryCardDeck {
-    private static final int[] DRAWABLE_IDS = {
-            R.drawable.baseball,
-            R.drawable.bat,
-            R.drawable.heart,
-            R.drawable.tree,
-            R.drawable.castle,
-            R.drawable.lightning,
-            R.drawable.wave,
-            R.drawable.pug,
-            R.drawable.mountain,
-            R.drawable.barbie
-    };
+public abstract class MemoryCardDeck {
     private final List<MemoryCard> cards;
     private final BehaviorSubject<List<MemoryCard>> cardsSubject;
 
-    public MemoryCardDeck(@MemoryCardDeckSize int numCards) {
+    public MemoryCardDeck(@MemoryCardDeckSize int numCards, int[] frontResIds, int backResId) {
         cards = new ArrayList<>();
         cardsSubject = BehaviorSubject.create();
         for (int i = 0; i < numCards/2; i++) {
-            cards.add(new MemoryCard(DRAWABLE_IDS[i]));
-            cards.add(new MemoryCard(DRAWABLE_IDS[i]));
+            cards.add(new MemoryCard(frontResIds[i], backResId));
+            cards.add(new MemoryCard(frontResIds[i], backResId));
         }
         shuffle();
         cardsSubject.onNext(cards);

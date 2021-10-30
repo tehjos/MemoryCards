@@ -15,6 +15,7 @@ import com.example.memorycards.R;
 import com.example.memorycards.StopWatch;
 import com.example.memorycards.model.MemoryCardDeck;
 import com.example.memorycards.model.MemoryCardDeckSize;
+import com.example.memorycards.model.StandardDeck;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity{
     private void init() {
         Timber.d("init");
         disposables = new CompositeDisposable();
-        memoryCardDeck = new MemoryCardDeck(MemoryCardDeckSize.LARGE);
+        memoryCardDeck = new StandardDeck(MemoryCardDeckSize.MEDIUM);
         stopWatch = new StopWatch();
         setUpAppBar();
         setUpRecyclerView();

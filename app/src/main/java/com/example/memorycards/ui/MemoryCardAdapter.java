@@ -35,7 +35,7 @@ public class MemoryCardAdapter extends ListAdapter<MemoryCard, MemoryCardViewHol
         if (card.isOpen()) {
             holder.setCardImage(card.getFrontDrawableId());
         } else {
-            holder.setCardImage(MemoryCard.BACK_DRAWABLE_ID);
+            holder.setCardImage(card.getBackDrawableId());
         }
     }
 
