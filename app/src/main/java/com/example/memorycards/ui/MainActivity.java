@@ -1,20 +1,23 @@
 package com.example.memorycards.ui;
 
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-
 import com.example.memorycards.R;
+import com.example.memorycards.StopWatch;
 import com.example.memorycards.model.MemoryCardDeck;
 import com.example.memorycards.model.MemoryCardDeckSize;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -24,6 +27,7 @@ import timber.log.Timber;
 public class MainActivity extends AppCompatActivity{
     private MemoryCardAdapter memoryCardAdapter;
     private MemoryCardDeck memoryCardDeck;
+    private StopWatch stopWatch;
     private CompositeDisposable disposables;
 
     @Override
@@ -46,9 +50,11 @@ public class MainActivity extends AppCompatActivity{
         int id = item.getItemId();
         if (id == R.id.new_game) {
             memoryCardDeck.newGame();
+            stopWatch.reset();
             return true;
         } else if (id == R.id.replay) {
             memoryCardDeck.resetCards();
+            stopWatch.reset();
             return true;
         }
         return false;
@@ -56,34 +62,56 @@ public class MainActivity extends AppCompatActivity{
 
     private void init() {
         Timber.d("init");
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
-        RecyclerView cardsRv = findViewById(R.id.cards_rv);
-        cardsRv.setHasFixedSize(true);
         disposables = new CompositeDisposable();
-        memoryCardDeck = new MemoryCardDeck(MemoryCardDeckSize.SMALL);
-        setUpAdapter();
-        cardsRv.setLayoutManager(new MemoryCardGridLayoutManager(this));
-        cardsRv.setAdapter(memoryCardAdapter);
+        memoryCardDeck = new MemoryCardDeck(MemoryCardDeckSize.LARGE);
+        stopWatch = new StopWatch();
+        setUpAppBar();
+        setUpRecyclerView();
         observeCards();
+        observeTime();
     }
 
-    private void setUpAdapter() {
-        Timber.d("setUpAdapter");
+    private void setUpAppBar() {
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+    }
+
+    private void setUpRecyclerView() {
         memoryCardAdapter = new MemoryCardAdapter(position -> {
             Timber.d("onCardClicked: %d", position);
             memoryCardDeck.openCard(position);
+            stopWatch.start();
         });
+        RecyclerView cardsRv = findViewById(R.id.cards_rv);
+        cardsRv.setHasFixedSize(true);
+        cardsRv.setLayoutManager(new MemoryCardGridLayoutManager(this));
+        cardsRv.setAdapter(memoryCardAdapter);
     }
 
     private void observeCards() {
-        Timber.d("observeCards");
         Disposable d = memoryCardDeck.observeCards()
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(ArrayList::new)
                 .doOnNext(memoryCardAdapter::submitList)
                 .subscribe();
         disposables.add(d);
+    }
+
+    private void observeTime() {
+        TextView timeText = findViewById(R.id.time_text);
+        Disposable d = stopWatch.observeTime()
+                .filter(time -> time >= 0)
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(this::formatTime)
+                .doOnNext(timeText::setText)
+                .subscribe();
+        disposables.add(d);
+    }
+
+    private String formatTime(Long timeInSeconds) {
+        long seconds = timeInSeconds % 60;
+        long minutes = (timeInSeconds / 60) % 60;
+        return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
     }
 
     @Override

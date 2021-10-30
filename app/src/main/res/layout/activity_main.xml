@@ -20,7 +20,7 @@
         app:titleTextColor="@color/white" />
 
     <TextView
-        android:id="@+id/timer_text"
+        android:id="@+id/time_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -28,7 +28,7 @@
         app:layout_constraintBottom_toTopOf="@id/cards_rv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         tools:text="00:00" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -38,7 +38,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/timer_text"
+        app:layout_constraintTop_toBottomOf="@id/time_text"
         app:layout_constraintVertical_bias="0.2"
         tools:itemCount="20"
         tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"

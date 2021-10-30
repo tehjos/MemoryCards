@@ -8,6 +8,7 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
+import timber.log.Timber;
 
 public class MemoryCardDeck {
     private static final int[] DRAWABLE_IDS = {
@@ -16,7 +17,11 @@ public class MemoryCardDeck {
             R.drawable.heart,
             R.drawable.tree,
             R.drawable.castle,
-            R.drawable.lightning
+            R.drawable.lightning,
+            R.drawable.wave,
+            R.drawable.pug,
+            R.drawable.mountain,
+            R.drawable.barbie
     };
     private final List<MemoryCard> cards;
     private final BehaviorSubject<List<MemoryCard>> cardsSubject;
@@ -37,6 +42,7 @@ public class MemoryCardDeck {
     }
 
     public void resetCards() {
+        Timber.d("resetCards");
         for (int i = 0; i < cards.size(); i++) {
             cards.set(i, cards.get(i).copy(false));
         }
@@ -44,6 +50,7 @@ public class MemoryCardDeck {
     }
 
     public void newGame() {
+        Timber.d("newGame");
         shuffle();
         resetCards();
     }
@@ -51,6 +58,7 @@ public class MemoryCardDeck {
     public void openCard(int position) {
         MemoryCard oldCard = cards.get(position);
         if (!oldCard.isOpen()) {
+            Timber.d("openCard: %d", position);
             MemoryCard newCard = oldCard.copy(true);
             cards.set(position, newCard);
             cardsSubject.onNext(cards);
