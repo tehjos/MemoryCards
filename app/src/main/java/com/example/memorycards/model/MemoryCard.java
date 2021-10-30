@@ -54,6 +54,10 @@ public class MemoryCard {
         );
     }
 
+    public boolean isMatch(MemoryCard card) {
+        return card.frontDrawableId == this.frontDrawableId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

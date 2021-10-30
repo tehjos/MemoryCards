@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onDestroy() {
         super.onDestroy();
         Timber.d("onDestroy");
+        memoryCardDeck.close();
         disposables.dispose();
     }
 }
