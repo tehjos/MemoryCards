@@ -1,4 +1,4 @@
-package com.example.memorycards;
+package com.example.memorycards.game;
 
 import java.util.concurrent.TimeUnit;
 
@@ -40,6 +40,7 @@ public class StopWatch {
                             return Observable.just(0L);
                     }
                 })
+                .filter(time -> time >= 0)
                 .hide();
     }
 

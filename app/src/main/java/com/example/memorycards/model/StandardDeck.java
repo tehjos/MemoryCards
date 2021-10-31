@@ -17,7 +17,11 @@ public class StandardDeck extends MemoryCardDeck {
             R.drawable.barbie
     };
 
-    public StandardDeck(@MemoryCardDeckSize int numCards) {
+    private StandardDeck(@MemoryCardDeckSize int numCards) {
         super(numCards, FRONT_DRAWABLE_IDS, BACK_DRAWABLE_ID);
+    }
+
+    public static MemoryCardDeck create(@MemoryCardDeckSize int numCards) {
+        return new StandardDeck(numCards);
     }
 }

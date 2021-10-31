@@ -7,8 +7,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import com.example.memorycards.R;
+import com.example.memorycards.databinding.MemoryCardItemBinding;
 import com.example.memorycards.model.MemoryCard;
+
+import timber.log.Timber;
 
 public class MemoryCardAdapter extends ListAdapter<MemoryCard, MemoryCardViewHolder> {
     private final OnCardClickedListener listener;
@@ -21,11 +23,13 @@ public class MemoryCardAdapter extends ListAdapter<MemoryCard, MemoryCardViewHol
     @NonNull
     @Override
     public MemoryCardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MemoryCardViewHolder(
-                LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.memory_card_item, parent, false),
-                listener
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        MemoryCardItemBinding binding = MemoryCardItemBinding.inflate(
+                layoutInflater,
+                parent,
+                false
         );
+        return new MemoryCardViewHolder(binding, listener);
     }
 
     @Override

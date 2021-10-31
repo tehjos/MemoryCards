@@ -6,15 +6,16 @@ import android.widget.ImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.memorycards.R;
+import com.example.memorycards.databinding.MemoryCardItemBinding;
 
 public class MemoryCardViewHolder extends RecyclerView.ViewHolder{
-    private final ImageView cardImage;
+    private final MemoryCardItemBinding binding;
     private int position;
 
-    public MemoryCardViewHolder(View view, OnCardClickedListener listener) {
-        super(view);
-        cardImage = view.findViewById(R.id.card_image);
-        cardImage.setOnClickListener(v -> listener.onCardClicked(position));
+    public MemoryCardViewHolder(MemoryCardItemBinding binding, OnCardClickedListener listener) {
+        super(binding.getRoot());
+        this.binding = binding;
+        binding.cardImage.setOnClickListener(v -> listener.onCardClicked(position));
     }
 
     public void setPosition(int position) {
@@ -22,6 +23,6 @@ public class MemoryCardViewHolder extends RecyclerView.ViewHolder{
     }
 
     public void setCardImage(int resId) {
-        cardImage.setImageResource(resId);
+        binding.cardImage.setImageResource(resId);
     }
 }

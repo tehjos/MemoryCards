@@ -4,38 +4,33 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.memorycards.R;
-import com.example.memorycards.StopWatch;
-import com.example.memorycards.model.MemoryCardDeck;
-import com.example.memorycards.model.MemoryCardDeckSize;
-import com.example.memorycards.model.StandardDeck;
+import com.example.memorycards.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity{
+    private MainViewModel viewModel;
+    private ActivityMainBinding binding;
     private MemoryCardAdapter memoryCardAdapter;
-    private MemoryCardDeck memoryCardDeck;
-    private StopWatch stopWatch;
-    private CompositeDisposable disposables;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Timber.d("onCreate");
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding.setLifecycleOwner(this);
+        setContentView(binding.getRoot());
         init();
     }
 
@@ -50,12 +45,10 @@ public class MainActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.new_game) {
-            memoryCardDeck.newGame();
-            stopWatch.reset();
+            viewModel.setNewGame();
             return true;
         } else if (id == R.id.replay) {
-            memoryCardDeck.resetCards();
-            stopWatch.reset();
+            viewModel.resetGame();
             return true;
         }
         return false;
@@ -63,63 +56,24 @@ public class MainActivity extends AppCompatActivity{
 
     private void init() {
         Timber.d("init");
-        disposables = new CompositeDisposable();
-        memoryCardDeck = new StandardDeck(MemoryCardDeckSize.MEDIUM);
-        stopWatch = new StopWatch();
-        setUpAppBar();
+        setSupportActionBar(binding.toolbar);
         setUpRecyclerView();
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        binding.setViewModel(viewModel);
         observeCards();
-        observeTime();
-    }
-
-    private void setUpAppBar() {
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
     }
 
     private void setUpRecyclerView() {
+        Timber.d("setUpRecyclerView");
         memoryCardAdapter = new MemoryCardAdapter(position -> {
             Timber.d("onCardClicked: %d", position);
-            memoryCardDeck.openCard(position);
-            stopWatch.start();
+            viewModel.clickCard(position);
         });
-        RecyclerView cardsRv = findViewById(R.id.cards_rv);
-        cardsRv.setHasFixedSize(true);
-        cardsRv.setLayoutManager(new MemoryCardGridLayoutManager(this));
-        cardsRv.setAdapter(memoryCardAdapter);
+        binding.cardsRv.setLayoutManager(new MemoryCardGridLayoutManager(this));
+        binding.cardsRv.setAdapter(memoryCardAdapter);
     }
 
     private void observeCards() {
-        Disposable d = memoryCardDeck.observeCards()
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(ArrayList::new)
-                .doOnNext(memoryCardAdapter::submitList)
-                .subscribe();
-        disposables.add(d);
-    }
-
-    private void observeTime() {
-        TextView timeText = findViewById(R.id.time_text);
-        Disposable d = stopWatch.observeTime()
-                .filter(time -> time >= 0)
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(this::formatTime)
-                .doOnNext(timeText::setText)
-                .subscribe();
-        disposables.add(d);
-    }
-
-    private String formatTime(Long timeInSeconds) {
-        long seconds = timeInSeconds % 60;
-        long minutes = (timeInSeconds / 60) % 60;
-        return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Timber.d("onDestroy");
-        memoryCardDeck.close();
-        disposables.dispose();
+        viewModel.getCards().observe(this, memoryCardAdapter::submitList);
     }
 }

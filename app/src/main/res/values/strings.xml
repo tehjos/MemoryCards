@@ -3,4 +3,6 @@
     <string name="card_content_description">Card Image</string>
     <string name="new_game">New Game</string>
     <string name="replay">Replay</string>
+    <string name="time_label">Time:</string>
+    <string name="moves_label">Moves:</string>
 </resources>
