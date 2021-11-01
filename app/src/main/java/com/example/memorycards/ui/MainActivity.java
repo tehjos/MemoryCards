@@ -69,7 +69,10 @@ public class MainActivity extends AppCompatActivity{
             Timber.d("onCardClicked: %d", position);
             viewModel.clickCard(position);
         });
-        binding.cardsRv.setLayoutManager(new MemoryCardGridLayoutManager(this));
+        binding.cardsRv.setLayoutManager(
+                MemoryCardGridLayoutManager.create(
+                        this, getResources().getConfiguration().orientation
+        ));
         binding.cardsRv.setAdapter(memoryCardAdapter);
     }
 
